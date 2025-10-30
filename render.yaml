@@ -15,10 +15,11 @@ services:
   - type: web
     name: bank-mapping-tool-backend
     plan: free
+    region: frankfurt
     buildName: bank-mapping-tool-backend
     envVars:
       - key: NODE_VERSION
-        value: 18
+        value: 22.16.0
       - key: PORT
         value: 8080
       - key: OPENAI_API_KEY
@@ -33,6 +34,7 @@ services:
         value: 500
   - type: static_site
     name: bank-mapping-tool-frontend
+    region: frankfurt
     buildName: bank-mapping-tool-frontend
     envVars:
       - key: VITE_API_BASE
