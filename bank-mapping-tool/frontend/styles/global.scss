@@ -1,0 +1,26 @@
+$font-stack: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+$radius-base: 0.75rem;
+$shadow-soft: 0 20px 45px -25px rgba(79, 70, 229, 0.45);
+
+@mixin focus-ring {
+  @apply ring-2 ring-primary-500 ring-offset-2 ring-offset-white;
+}
+
+body {
+  font-family: $font-stack;
+  color: #0f172a;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  min-height: 100vh;
+}
+
+a {
+  color: theme('colors.primary.600');
+  &:hover {
+    color: theme('colors.primary.700');
+  }
+}
+
+.card {
+  border-radius: $radius-base;
+  box-shadow: $shadow-soft;
+}
