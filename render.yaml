@@ -8,6 +8,7 @@ services:
     region: frankfurt
     buildCommand: npm ci && npm run build
     startCommand: node dist/app.js
+    autoDeployTrigger: commit
     rootDir: bank-mapping-tool/backend
     envVars:
       - key: NODE_VERSION
@@ -30,7 +31,8 @@ services:
     plan: free
     region: frankfurt
     buildCommand: npm ci && npm run build
-    publishPath: dist
+    staticPublishPath: dist
+    autoDeployTrigger: commit
     rootDir: bank-mapping-tool/frontend
     envVars:
       - key: VITE_API_BASE
