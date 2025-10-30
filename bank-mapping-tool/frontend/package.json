@@ -4,12 +4,12 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "22.16.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5173"
   },
   "dependencies": {
     "@angular/cdk": "^17.3.8",
