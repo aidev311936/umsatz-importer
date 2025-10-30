@@ -3,7 +3,8 @@ services:
     name: bank-mapping-tool-backend
     env: node
     plan: free
-    buildCommand: cd backend && npm ci && npm run build
+    rootDir: bank-mapping-tool/backend
+    buildCommand: npm ci && npm run build
     startCommand: node dist/app.js
     envVars:
       - key: NODE_VERSION
