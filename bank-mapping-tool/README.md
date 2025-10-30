@@ -4,7 +4,7 @@ Vollständiges Full-Stack-Projekt zur automatischen Erkennung von Bank-Mappings 
 
 ## Projektüberblick
 
-- **Frontend**: Vue 3 (Composition API) + Vite + TypeScript + Tailwind CSS + SASS
+- **Frontend**: Vue 3 (Composition API) + Vite + TypeScript + Tailwind CSS
 - **Backend**: Node.js + Express + TypeScript
 - **Datenbank**: PostgreSQL (Tabelle `banking_mappings` wird vorausgesetzt)
 - **KI-Integration**: OpenAI Assistants API (bestehender Assistant über `OPENAI_ASSISTANT_ID`)

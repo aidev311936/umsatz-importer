@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // HSL-Variablen kommen aus styles/global.scss (siehe Schritt 2)
+        // HSL-Variablen kommen aus styles/global.css (siehe Schritt 2)
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
