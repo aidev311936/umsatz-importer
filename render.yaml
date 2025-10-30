@@ -1,22 +1,12 @@
-builds:
-  - name: bank-mapping-tool-backend
-    type: web
-    env: node
-    rootDir: bank-mapping-tool/backend
-    buildCommand: npm ci && npm run build
-    startCommand: node dist/app.js
-  - name: bank-mapping-tool-frontend
-    type: static
-    rootDir: bank-mapping-tool/frontend
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-
 services:
   - type: web
     name: bank-mapping-tool-backend
+    env: node
     plan: free
     region: frankfurt
-    buildName: bank-mapping-tool-backend
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/app.js
+    rootDir: bank-mapping-tool/backend
     envVars:
       - key: NODE_VERSION
         value: 22.16.0
@@ -32,10 +22,14 @@ services:
         value: https://bank-mapping-tool-frontend.onrender.com
       - key: AI_SAMPLE_LIMIT
         value: 500
-  - type: static_site
-    name: bank-mapping-tool-frontend
+
+staticSites:
+  - name: bank-mapping-tool-frontend
+    plan: free
     region: frankfurt
-    buildName: bank-mapping-tool-frontend
+    buildCommand: npm ci && npm run build
+    publishPath: dist
+    rootDir: bank-mapping-tool/frontend
     envVars:
       - key: VITE_API_BASE
         value: https://bank-mapping-tool-backend.onrender.com
