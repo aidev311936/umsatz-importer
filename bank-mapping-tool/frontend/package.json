@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@angular/cdk": "^17.3.8",
     "@headlessui/vue": "^1.7.17",
     "@heroicons/vue": "^2.1.1",
     "axios": "^1.6.8",
