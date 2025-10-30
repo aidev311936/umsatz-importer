@@ -1,3 +1,5 @@
+# Exported from Render on 2025-10-30T18:05:42Z
+version: "1"
 services:
   - type: web
     name: bank-mapping-tool-backend
@@ -9,9 +11,9 @@ services:
     rootDir: bank-mapping-tool/backend
     envVars:
       - key: NODE_VERSION
-        value: 22.16.0
+        sync: false
       - key: PORT
-        value: 8080
+        sync: false
       - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_ASSISTANT_ID
@@ -19,11 +21,12 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: CORS_ORIGIN
-        value: https://bank-mapping-tool-frontend.onrender.com
+        sync: false
       - key: AI_SAMPLE_LIMIT
-        value: 500
-  - type: static_site
+        sync: false
+  - type: web
     name: bank-mapping-tool-frontend
+    runtime: static
     plan: free
     region: frankfurt
     buildCommand: npm ci && npm run build
@@ -31,6 +34,5 @@ services:
     rootDir: bank-mapping-tool/frontend
     envVars:
       - key: VITE_API_BASE
-        value: https://bank-mapping-tool-backend.onrender.com
-
+        sync: false
 # Hinweis: Eine verwaltete Postgres-Instanz muss separat in Render angelegt werden. Die Verbindungs-URL wird als DATABASE_URL in den Backend-Service injiziert.
