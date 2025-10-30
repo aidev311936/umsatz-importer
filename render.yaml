@@ -1,11 +1,21 @@
-services:
-  - type: web
-    name: bank-mapping-tool-backend
+builds:
+  - name: bank-mapping-tool-backend
+    type: web
     env: node
-    plan: free
     rootDir: bank-mapping-tool/backend
     buildCommand: npm ci && npm run build
     startCommand: node dist/app.js
+  - name: bank-mapping-tool-frontend
+    type: static
+    rootDir: bank-mapping-tool/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+
+services:
+  - type: web
+    name: bank-mapping-tool-backend
+    plan: free
+    buildName: bank-mapping-tool-backend
     envVars:
       - key: NODE_VERSION
         value: 18
@@ -21,12 +31,9 @@ services:
         value: https://bank-mapping-tool-frontend.onrender.com
       - key: AI_SAMPLE_LIMIT
         value: 500
-  - type: web
+  - type: static_site
     name: bank-mapping-tool-frontend
-    env: static
-    rootDir: bank-mapping-tool/frontend
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
+    buildName: bank-mapping-tool-frontend
     envVars:
       - key: VITE_API_BASE
         value: https://bank-mapping-tool-backend.onrender.com
