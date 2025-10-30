@@ -4,8 +4,6 @@ services:
 - type: web
   name: bank-mapping-tool-frontend
   runtime: static
-  repo: https://github.com/aidev311936/umsatz-importer
-  branch: codex/create-full-stack-bank-mapping-tool
   envVars:
   - key: VITE_API_BASE
     sync: false
@@ -16,8 +14,6 @@ services:
 - type: web
   name: bank-mapping-tool-backend
   runtime: node
-  repo: https://github.com/aidev311936/umsatz-importer
-  branch: codex/create-full-stack-bank-mapping-tool
   plan: free
   envVars:
   - key: OPENAI_ASSISTANT_ID
