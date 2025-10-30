@@ -22,9 +22,8 @@ services:
         value: https://bank-mapping-tool-frontend.onrender.com
       - key: AI_SAMPLE_LIMIT
         value: 500
-
-staticSites:
-  - name: bank-mapping-tool-frontend
+  - type: static_site
+    name: bank-mapping-tool-frontend
     plan: free
     region: frankfurt
     buildCommand: npm ci && npm run build
