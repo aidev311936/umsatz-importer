@@ -2,7 +2,7 @@ services:
   - type: web
     name: bank-mapping-tool-backend
     env: node
-    plan: starter
+    plan: free
     buildCommand: cd backend && npm ci && npm run build
     startCommand: node dist/app.js
     envVars:
