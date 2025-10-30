@@ -24,8 +24,9 @@ services:
   - type: web
     name: bank-mapping-tool-frontend
     env: static
-    buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: frontend/dist
+    rootDir: bank-mapping-tool/frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE
         value: https://bank-mapping-tool-backend.onrender.com
