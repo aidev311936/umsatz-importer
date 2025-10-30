@@ -29,7 +29,6 @@ services:
     name: bank-mapping-tool-frontend
     runtime: static
     plan: free
-    region: frankfurt
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     autoDeployTrigger: commit
