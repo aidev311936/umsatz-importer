@@ -1,0 +1,46 @@
+:root {
+  color-scheme: light;
+  --font-stack: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --radius-base: 0.75rem;
+  --shadow-soft: 0 20px 45px -25px rgba(79, 70, 229, 0.45);
+}
+
+body {
+  font-family: var(--font-stack);
+  color: #0f172a;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  min-height: 100vh;
+}
+
+a {
+  color: hsl(var(--primary) / 0.6);
+}
+
+a:hover {
+  color: hsl(var(--primary) / 0.7);
+}
+
+input:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply ring-2 ring-primary-500 ring-offset-2 ring-offset-white;
+}
+
+@layer utilities {
+  /* Optional: explizite Utility, falls Komponenten fest 'border-primary-200' erwarten */
+  .border-primary-200 {
+    border-color: hsl(var(--primary) / 0.2) !important;
+  }
+}
+
+@layer components {
+  .card {
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-soft);
+  }
+}
