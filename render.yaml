@@ -14,7 +14,6 @@ services:
 - type: web
   name: bank-mapping-tool-backend
   runtime: node
-  plan: free
   envVars:
   - key: OPENAI_ASSISTANT_ID
     sync: false
@@ -30,7 +29,6 @@ services:
     sync: false
   - key: NODE_VERSION
     sync: false
-  region: oregon
   buildCommand: npm ci && npm run build
   startCommand: node dist/app.js
   autoDeployTrigger: commit
