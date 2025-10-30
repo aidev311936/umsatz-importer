@@ -1,39 +1,41 @@
-# Exported from Render on 2025-10-30T18:05:42Z
+# Exported from Render on 2025-10-30T18:20:01Z
 version: "1"
 services:
-  - type: web
-    name: bank-mapping-tool-backend
-    env: node
-    plan: free
-    region: frankfurt
-    buildCommand: npm ci && npm run build
-    startCommand: node dist/app.js
-    autoDeployTrigger: commit
-    rootDir: bank-mapping-tool/backend
-    envVars:
-      - key: NODE_VERSION
-        sync: false
-      - key: PORT
-        sync: false
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: OPENAI_ASSISTANT_ID
-        sync: false
-      - key: DATABASE_URL
-        sync: false
-      - key: CORS_ORIGIN
-        sync: false
-      - key: AI_SAMPLE_LIMIT
-        sync: false
-  - type: web
-    name: bank-mapping-tool-frontend
-    runtime: static
-    plan: free
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    autoDeployTrigger: commit
-    rootDir: bank-mapping-tool/frontend
-    envVars:
-      - key: VITE_API_BASE
-        sync: false
-# Hinweis: Eine verwaltete Postgres-Instanz muss separat in Render angelegt werden. Die Verbindungs-URL wird als DATABASE_URL in den Backend-Service injiziert.
+- type: web
+  name: bank-mapping-tool-frontend
+  runtime: static
+  repo: https://github.com/aidev311936/umsatz-importer
+  branch: codex/create-full-stack-bank-mapping-tool
+  envVars:
+  - key: VITE_API_BASE
+    sync: false
+  buildCommand: npm ci && npm run build
+  staticPublishPath: dist
+  autoDeployTrigger: commit
+  rootDir: bank-mapping-tool/frontend
+- type: web
+  name: bank-mapping-tool-backend
+  runtime: node
+  repo: https://github.com/aidev311936/umsatz-importer
+  branch: codex/create-full-stack-bank-mapping-tool
+  plan: free
+  envVars:
+  - key: OPENAI_ASSISTANT_ID
+    sync: false
+  - key: OPENAI_API_KEY
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: AI_SAMPLE_LIMIT
+    sync: false
+  - key: CORS_ORIGIN
+    sync: false
+  - key: PORT
+    sync: false
+  - key: NODE_VERSION
+    sync: false
+  region: oregon
+  buildCommand: npm ci && npm run build
+  startCommand: node dist/app.js
+  autoDeployTrigger: commit
+  rootDir: bank-mapping-tool/backend
