@@ -32,6 +32,6 @@ services:
   - key: NODE_VERSION
     value: 22.16.0
   buildCommand: npm install && npm run build
-  startCommand: node dist/app.js
+  startCommand: node dist/backend/src/app.js
   autoDeployTrigger: commit
   rootDir: bank-mapping-tool/backend
