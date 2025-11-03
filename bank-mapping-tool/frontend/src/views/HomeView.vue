@@ -218,7 +218,7 @@ const loadIntoForm = (mapping: BankMapping) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .form-input {
   @apply w-full rounded-xl border border-slate-200 bg-white/80 px-4 py-2 text-sm text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white;
 }
