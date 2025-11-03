@@ -55,7 +55,7 @@ const remove = (index: number) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .form-label {
   @apply block text-sm font-medium text-slate-600;
 }

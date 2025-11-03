@@ -91,7 +91,7 @@ const onFileInput = async (event: Event) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 pre {
   font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
