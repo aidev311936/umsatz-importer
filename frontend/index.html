@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Umsatz Importer Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="./public/favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container">
+        <h1>Umsatz Importer</h1>
+        <p class="subtitle">Monitor recent import jobs and check their status.</p>
+        <button id="refresh-button" type="button" aria-live="polite">Refresh</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="card" aria-live="polite">
+        <h2>Summary</h2>
+        <dl class="summary" id="summary">
+          <div>
+            <dt>Total jobs</dt>
+            <dd id="summary-total">–</dd>
+          </div>
+          <div>
+            <dt>Completed</dt>
+            <dd id="summary-completed">–</dd>
+          </div>
+          <div>
+            <dt>Running</dt>
+            <dd id="summary-running">–</dd>
+          </div>
+          <div>
+            <dt>Pending</dt>
+            <dd id="summary-pending">–</dd>
+          </div>
+          <div>
+            <dt>Failed</dt>
+            <dd id="summary-failed">–</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="card" aria-live="polite">
+        <div class="card-header">
+          <h2>Recent jobs</h2>
+          <span id="last-updated" class="meta">Last updated: never</span>
+        </div>
+        <div id="jobs-container" class="jobs"></div>
+        <p id="empty-state" class="empty" hidden>No jobs were found.</p>
+        <p id="error-message" class="error" role="alert" hidden></p>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="container">
+        <p>Data refreshed from <code>/api/imports</code>.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="./dist/main.js"></script>
+  </body>
+</html>
