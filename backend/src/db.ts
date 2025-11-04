@@ -1,9 +1,6 @@
-import pg from 'pg';
+import pg, { Pool as PgPool } from 'pg';
+import type { Pool } from 'pg';
 import { DatabaseConfig } from './types.js';
-
-const { Pool: PgPool } = pg;
-
-type Pool = pg.Pool;
 
 let pool: Pool | null = null;
 
