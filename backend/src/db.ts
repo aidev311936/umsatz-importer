@@ -50,6 +50,10 @@ function parseConnectionStringSsl(connectionString: string | undefined): Databas
     if (interpreted !== undefined) {
       return interpreted;
     }
+
+    if (shouldDefaultToSsl(url)) {
+      return { rejectUnauthorized: false };
+    }
   } catch (error) {
     // ignore invalid connection strings and fall back to pg defaults
   }
@@ -80,6 +84,57 @@ function parseSslMode(value: string | undefined | null): DatabaseConfig['ssl'] {
   }
 
   return undefined;
+}
+
+function shouldDefaultToSsl(url: URL): boolean {
+  const hostname = url.hostname;
+  if (!hostname) {
+    return false;
+  }
+
+  return !isLocalHost(hostname);
+}
+
+function isLocalHost(hostname: string): boolean {
+  const normalized = hostname.trim().toLowerCase();
+  if (!normalized) {
+    return false;
+  }
+
+  if (normalized === 'localhost' || normalized === '::1' || normalized.endsWith('.local')) {
+    return true;
+  }
+
+  if (normalized === '127.0.0.1') {
+    return true;
+  }
+
+  if (!/^[0-9.]+$/.test(normalized)) {
+    return false;
+  }
+
+  const octets = normalized.split('.').map((part) => Number.parseInt(part, 10));
+  if (octets.length !== 4 || octets.some((value) => Number.isNaN(value) || value < 0 || value > 255)) {
+    return false;
+  }
+
+  if (octets[0] === 10) {
+    return true;
+  }
+
+  if (octets[0] === 127) {
+    return true;
+  }
+
+  if (octets[0] === 192 && octets[1] === 168) {
+    return true;
+  }
+
+  if (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31) {
+    return true;
+  }
+
+  return false;
 }
 
 export async function shutdownPool(): Promise<void> {
