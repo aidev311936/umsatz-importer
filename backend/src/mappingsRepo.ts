@@ -1,11 +1,13 @@
 import { randomUUID } from 'crypto';
-import type { Pool } from 'pg';
+import type * as pg from 'pg';
 import {
   CreateMappingInput,
   MappingRecord,
   MappingsRepository,
   UpdateMappingInput,
 } from './types.js';
+
+type Pool = pg.Pool;
 
 export class PostgresMappingsRepository implements MappingsRepository {
   constructor(private readonly pool: Pool) {}
