@@ -21,3 +21,11 @@ export interface ImportResponse {
   jobs: ImportJob[];
   lastUpdated?: string;
 }
+
+declare global {
+  interface Window {
+    __API_BASE__?: string;
+  }
+}
+
+export {};
