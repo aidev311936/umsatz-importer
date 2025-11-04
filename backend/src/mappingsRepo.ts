@@ -86,7 +86,8 @@ export class PostgresMappingsRepository implements MappingsRepository {
 
   async remove(id: string): Promise<boolean> {
     const result = await this.pool.query('DELETE FROM mappings WHERE id = $1', [id]);
-    return result.rowCount > 0;
+    const rowCount = result.rowCount ?? 0;
+    return rowCount > 0;
   }
 }
 
