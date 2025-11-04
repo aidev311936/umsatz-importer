@@ -1,6 +1,18 @@
 import type { ImportJob, ImportResponse, ImportStatus } from './types';
 
-const API_ENDPOINT = '/api/imports';
+const API_PATH = '/imports';
+
+function resolveApiEndpoint(): string {
+  const base = window.__API_BASE__?.trim();
+  if (!base) {
+    return `/api${API_PATH}`;
+  }
+
+  const normalizedBase = base.replace(/\/+$/, '');
+  return `${normalizedBase}${API_PATH}`;
+}
+
+const API_ENDPOINT = resolveApiEndpoint();
 
 const summaryTotal = document.getElementById('summary-total');
 const summaryCompleted = document.getElementById('summary-completed');
