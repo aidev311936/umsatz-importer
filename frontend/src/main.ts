@@ -11,7 +11,7 @@ const jobsContainer = document.getElementById('jobs-container');
 const emptyState = document.getElementById('empty-state');
 const errorMessage = document.getElementById('error-message');
 const lastUpdated = document.getElementById('last-updated');
-const refreshButton = document.getElementById('refresh-button');
+const refreshButton = document.querySelector<HTMLButtonElement>('#refresh-button');
 
 function formatDate(value: string | null): string {
   if (!value) {
