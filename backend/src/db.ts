@@ -1,5 +1,4 @@
-import pg, { Pool as PgPool } from 'pg';
-import type { Pool } from 'pg';
+import { Pool } from 'pg';
 import { DatabaseConfig } from './types.js';
 
 let pool: Pool | null = null;
@@ -7,7 +6,7 @@ let pool: Pool | null = null;
 export function getPool(config: DatabaseConfig = {}): Pool {
   if (!pool) {
     const connectionString = config.connectionString ?? process.env.DATABASE_URL;
-    pool = new PgPool({
+    pool = new Pool({
       connectionString,
       ssl: resolveSslSetting(connectionString, config.ssl),
     });
