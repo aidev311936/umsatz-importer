@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.backend.json",
     "start": "node dist/server.js",
     "dev": "ts-node-esm src/server.ts"
   },
