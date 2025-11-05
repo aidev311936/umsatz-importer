@@ -78,6 +78,15 @@ npm run build     # compiles to dist/main.js
 
 Serve `index.html`, `styles.css`, and the compiled assets from any static hosting solution (e.g., `npm install -g serve && serve .`). When deploying behind a separate backend host, set `__API_BASE__` to rewrite API requests during your build or hosting configuration.
 
+### Configuring the frontend API base URL
+
+The frontend publishes `window.__API_BASE__` before the bundle executes by reading the `data-api-base` attribute on the inline script in `frontend/index.html`. At deployment time, configure your hosting platform to replace the `{{ API_BASE_URL }}` placeholder with the fully qualified backend origin. Two common approaches are:
+
+- **Static hosts with build-time substitution:** e.g., on Netlify, Cloudflare Pages, or Vercel, define an environment variable such as `API_BASE_URL` and add a post-build step (`envsubst`, `sed`, templating plugin) that replaces the placeholder in `index.html` before uploading the assets.
+- **Server-side templating:** if the file is served through Nginx, Apache, or another web server, use SSI, `envsubst`, or a small middleware to inject the runtime environment variable when responding with `index.html`.
+
+If no substitution occurs, the dashboard falls back to same-origin requests and assumes the backend is reachable under the current host.
+
 ## Deployment guidance
 
 1. Provision infrastructure for:

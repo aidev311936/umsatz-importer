@@ -60,6 +60,12 @@
       </div>
     </footer>
 
+    <script
+      id="api-base"
+      data-api-base="{{ API_BASE_URL }}"
+    >
+      window.__API_BASE__ = document.currentScript.dataset.apiBase;
+    </script>
     <script type="module" src="./dist/main.js"></script>
   </body>
 </html>
