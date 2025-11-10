@@ -1,0 +1,12 @@
+{
+  "name": "umsatz-importer",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "lint": "echo 'Add project wide linting per package'"
+  }
+}
