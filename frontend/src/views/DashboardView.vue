@@ -86,9 +86,19 @@ const csvFile = ref(null);
 const csvAnalysis = ref(null);
 const delimiter = ref(';');
 const saving = ref(false);
+const currentSearch = ref('');
+let latestRequestToken = 0;
 
-const loadMappings = async (search = '') => {
-  mappings.value = await fetchBankMappings(search);
+const loadMappings = async (search = currentSearch.value) => {
+  const requestToken = ++latestRequestToken;
+  const results = await fetchBankMappings(search);
+  if (requestToken !== latestRequestToken) {
+    return;
+  }
+
+  currentSearch.value = search;
+  mappings.value = results;
+
   if (selectedMapping.value) {
     const exists = mappings.value.find((item) => item.id === selectedMapping.value.id);
     if (!exists) {
