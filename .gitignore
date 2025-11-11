@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+.DS_Store
+.pnp.*
+.yarn/
+.vscode/
+coverage/
