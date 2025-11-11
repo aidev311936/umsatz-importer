@@ -1,4 +1,7 @@
 export function requireSupportToken(req, _res, next) {
+  if (req.method === 'OPTIONS') {
+    return next();
+  }
   const configuredToken =
     req.app?.locals?.supportToken ?? process.env.SUPPORT_TOKEN?.trim();
 
