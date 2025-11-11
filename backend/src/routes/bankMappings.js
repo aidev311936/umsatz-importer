@@ -53,6 +53,9 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   try {
     const updated = await req.bankMappingService.update(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({ message: 'Bank mapping not found' });
+    }
     res.json({ data: updated });
   } catch (error) {
     next(error);
