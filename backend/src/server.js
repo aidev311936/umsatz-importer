@@ -15,7 +15,11 @@ if (!supportToken) {
 
 const app = express();
 
-app.use(cors({ origin: process.env.CORS_ORIGIN?.split(',') ?? true }));
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
+  : true;
+
+app.use(cors({ origin: corsOrigins }));
 app.use(express.json({ limit: '5mb' }));
 
 async function healthCheckHandler(req, res) {

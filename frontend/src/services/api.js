@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const rawBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+const baseURL = rawBaseUrl ? rawBaseUrl.replace(/\/+$/, '') : '/api';
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL,
 });
 
 apiClient.interceptors.request.use((config) => {
@@ -13,22 +16,22 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export const fetchBankMappings = async (search = '') => {
-  const response = await apiClient.get('/bank-mappings', { params: { search } });
+  const response = await apiClient.get('bank-mappings', { params: { search } });
   return response.data.data;
 };
 
 export const fetchBankMapping = async (id) => {
-  const response = await apiClient.get(`/bank-mappings/${id}`);
+  const response = await apiClient.get(`bank-mappings/${id}`);
   return response.data.data;
 };
 
 export const createBankMapping = async (payload) => {
-  const response = await apiClient.post('/bank-mappings', payload);
+  const response = await apiClient.post('bank-mappings', payload);
   return response.data.data;
 };
 
 export const updateBankMapping = async (id, payload) => {
-  const response = await apiClient.put(`/bank-mappings/${id}`, payload);
+  const response = await apiClient.put(`bank-mappings/${id}`, payload);
   return response.data.data;
 };
 
@@ -36,7 +39,7 @@ export const analyzeCsv = async ({ file, delimiter }) => {
   const formData = new FormData();
   formData.append('file', file);
   if (delimiter) formData.append('delimiter', delimiter);
-  const response = await apiClient.post('/bank-mappings/analyze', formData);
+  const response = await apiClient.post('bank-mappings/analyze', formData);
   return response.data.data;
 };
 
@@ -51,7 +54,7 @@ export const requestAiSuggestion = async ({ file, csvSample, delimiter, addition
   if (additionalContext) {
     formData.append('additionalContext', JSON.stringify(additionalContext));
   }
-  const response = await apiClient.post('/bank-mappings/suggest', formData);
+  const response = await apiClient.post('bank-mappings/suggest', formData);
   return response.data;
 };
 
