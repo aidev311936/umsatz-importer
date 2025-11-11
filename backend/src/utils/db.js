@@ -13,9 +13,19 @@ types.setTypeParser(TEXT_ARRAY_OID, (val) => {
 });
 
 export function createPool() {
-  const connectionString = process.env.DATABASE_URL;
+  const baseConnectionString = process.env.DATABASE_URL;
+  const sslMode = process.env.PGSSLMODE;
+  let connectionString = baseConnectionString;
+
   if (!connectionString) {
     console.warn('DATABASE_URL is not set. Database features will not work.');
+  } else if (sslMode) {
+    const hasQuery = connectionString.includes('?');
+    const hasSslModeParam = /[?&]sslmode=/i.test(connectionString);
+    if (!hasSslModeParam) {
+      const separator = hasQuery ? '&' : '?';
+      connectionString = `${connectionString}${separator}sslmode=${sslMode}`;
+    }
   }
 
   const pool = new Pool({
