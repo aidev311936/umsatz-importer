@@ -31,7 +31,8 @@ Damit werden die Abhängigkeiten für Frontend und Backend installiert.
 | Variable | Beschreibung |
 | --- | --- |
 | `DATABASE_URL` | Connection String zur Postgres-Datenbank. |
-| `DB_SSL` | `true`, wenn eine SSL-Verbindung zur DB aufgebaut werden soll. |
+| `DB_SSL` | `true`, wenn eine SSL-Verbindung zur DB aufgebaut werden soll (empfohlen für Render). |
+| `PGSSLMODE` | Wert für den `sslmode`-Parameter (z. B. `require`), wird automatisch an die `DATABASE_URL` angehängt. |
 | `SUPPORT_TOKEN` | Token, das bei allen API-Requests im Header `x-support-token` mitgeschickt werden muss. |
 | `OPENAI_API_KEY` | API Key für den OpenAI-Endpunkt (für KI-Vorschläge). |
 | `OPENAI_ASSISTANT_ID` | ID des vorhandenen OpenAI-Assistants. |
