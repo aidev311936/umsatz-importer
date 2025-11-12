@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import BankMappingList from '../components/BankMappingList.vue';
 import BankMappingEditor from '../components/BankMappingEditor.vue';
@@ -142,7 +142,7 @@ const createDraft = () => {
           }
       : {},
   };
-  draftMapping.value = reactive(base);
+  draftMapping.value = JSON.parse(JSON.stringify(base));
   selectedMapping.value = null;
 };
 
