@@ -1,8 +1,6 @@
-import OpenAI from 'openai';
+import fetch from 'node-fetch';
 
-let client;
-
-function getClient() {
+export async function requestMappingSuggestion({ assistantId, csvSample }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     const error = new Error('OPENAI_API_KEY is not configured');
@@ -10,14 +8,6 @@ function getClient() {
     throw error;
   }
 
-  if (!client) {
-    client = new OpenAI({ apiKey });
-  }
-
-  return client;
-}
-
-export async function requestMappingSuggestion({ assistantId, csvSample }) {
   const resolvedAssistantId = assistantId ?? process.env.OPENAI_ASSISTANT_ID;
   if (!resolvedAssistantId) {
     const error = new Error('OPENAI_ASSISTANT_ID is not configured');
@@ -29,36 +19,30 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     throw new Error('csvSample is required');
   }
 
-  const client = getClient();
-
-  const thread = await client.beta.threads.create();
-  await client.beta.threads.messages.create(thread.id, {
-    role: 'user',
-    content: csvSample,
+  const res = await fetch(`https://api.openai.com/v1/assistants/${resolvedAssistantId}/responses`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'OpenAI-Beta': 'assistants=v2',
+    },
+    body: JSON.stringify({ input: csvSample }),
   });
 
-  let run = await client.beta.threads.runs.create(thread.id, {
-    assistant_id: resolvedAssistantId,
-  });
-
-  while (run.status === 'queued' || run.status === 'in_progress') {
-    await new Promise((r) => setTimeout(r, 800));
-    run = await client.beta.threads.runs.retrieve(thread.id, run.id);
-  }
-  if (run.status !== 'completed') {
-    throw new Error(
-      `Run failed with status=${run.status}, details=${JSON.stringify(run.last_error || {})}`
-    );
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`OpenAI ${res.status}: ${err}`);
   }
 
-  const list = await client.beta.threads.messages.list(thread.id, { order: 'desc', limit: 1 });
-  const msg = list.data?.[0];
-  const part = msg?.content?.[0];
+  const data = await res.json();
+
+  const first = data?.output?.[0];
+  const part = first?.content?.[0];
 
   let raw =
     part?.text?.value ??
     (typeof part?.text === 'string' ? part.text : undefined) ??
-    run?.output_text;
+    data?.output_text;
   if (!raw) {
     throw new Error('OpenAI API did not return a suggestion payload');
   }
