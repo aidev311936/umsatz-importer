@@ -1,8 +1,8 @@
-import fetch from 'node-fetch';
+import OpenAI from 'openai';
 
-const OPENAI_BASE_URL = 'https://api.openai.com/v1';
+let client;
 
-export async function requestMappingSuggestion({ assistantId, csvSample }) {
+function getClient() {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     const error = new Error('OPENAI_API_KEY is not configured');
@@ -10,47 +10,34 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     throw error;
   }
 
-  if (!assistantId) {
+  if (!client) {
+    client = new OpenAI({ apiKey });
+  }
+
+  return client;
+}
+
+export async function requestMappingSuggestion({ assistantId, csvSample }) {
+  const resolvedAssistantId = assistantId ?? process.env.OPENAI_ASSISTANT_ID;
+  if (!resolvedAssistantId) {
     const error = new Error('OPENAI_ASSISTANT_ID is not configured');
     error.status = 501;
     throw error;
   }
 
-  const response = await fetch(`${OPENAI_BASE_URL}/responses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-      'OpenAI-Beta': 'assistants=v2',
-    },
-    body: JSON.stringify({
-      assistant_id: assistantId,
-      input: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: csvSample,
-            },
-          ],
-        },
-      ],
-    }),
-  });
-
-  if (!response.ok) {
-    const error = new Error(`OpenAI API error: ${response.status}`);
-    error.status = response.status;
-    error.details = await response.text();
-    throw error;
+  if (!csvSample) {
+    throw new Error('csvSample is required');
   }
 
-  const data = await response.json();
-  const message = data.output?.[0]?.content?.[0]?.text;
-  if (!message) {
+  const response = await getClient().responses.create({
+    assistant_id: resolvedAssistantId,
+    input: csvSample,
+  });
+
+  const raw = response.output?.[0]?.content?.[0]?.text?.value;
+  if (!raw) {
     throw new Error('OpenAI API did not return a suggestion payload');
   }
 
-  return JSON.parse(message);
+  return JSON.parse(raw);
 }
