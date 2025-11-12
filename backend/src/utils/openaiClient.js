@@ -2,12 +2,7 @@ import fetch from 'node-fetch';
 
 const OPENAI_BASE_URL = 'https://api.openai.com/v1';
 
-export async function requestMappingSuggestion({
-  assistantId,
-  csvSample,
-  analysis,
-  additionalContext,
-}) {
+export async function requestMappingSuggestion({ assistantId, csvSample }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     const error = new Error('OPENAI_API_KEY is not configured');
@@ -26,6 +21,7 @@ export async function requestMappingSuggestion({
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
+      'OpenAI-Beta': 'assistants=v2',
     },
     body: JSON.stringify({
       assistant_id: assistantId,
@@ -35,7 +31,7 @@ export async function requestMappingSuggestion({
           content: [
             {
               type: 'text',
-              text: JSON.stringify({ csvSample, analysis, additionalContext }),
+              text: csvSample,
             },
           ],
         },
