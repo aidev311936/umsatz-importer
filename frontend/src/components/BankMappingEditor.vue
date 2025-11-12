@@ -69,7 +69,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'save', 'request-ai']);
 
-const draft = reactive({
+const createEmptyDraft = () => ({
   id: null,
   bank_name: '',
   booking_date: [],
@@ -80,6 +80,24 @@ const draft = reactive({
   without_header: false,
   detection_hints: {},
 });
+
+const draft = reactive(createEmptyDraft());
+
+const clone = (value) => JSON.parse(JSON.stringify(value ?? {}));
+
+const assignDraft = (value) => {
+  const normalized = value ? { ...createEmptyDraft(), ...clone(value) } : createEmptyDraft();
+
+  const existingKeys = new Set(Object.keys(draft));
+  Object.keys(normalized).forEach((key) => existingKeys.delete(key));
+  existingKeys.forEach((key) => {
+    delete draft[key];
+  });
+
+  Object.assign(draft, normalized);
+};
+
+let lastSynced = '';
 
 const detectionHints = computed({
   get() {
@@ -102,16 +120,29 @@ const detectionHints = computed({
 watch(
   () => props.modelValue,
   (value) => {
-    if (!value) return;
-    Object.assign(draft, JSON.parse(JSON.stringify(value)));
+    if (!value) {
+      assignDraft(null);
+      lastSynced = '';
+      return;
+    }
+
+    assignDraft(value);
+    lastSynced = JSON.stringify(clone(draft));
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 watch(
   draft,
   () => {
-    emit('update:modelValue', JSON.parse(JSON.stringify(draft)));
+    if (!props.modelValue) return;
+
+    const payload = clone(draft);
+    const serialized = JSON.stringify(payload);
+    if (serialized === lastSynced) return;
+
+    lastSynced = serialized;
+    emit('update:modelValue', payload);
   },
   { deep: true }
 );
