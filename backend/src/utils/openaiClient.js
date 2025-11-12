@@ -25,12 +25,20 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     throw error;
   }
 
+  const openAiModel = process.env.OPENAI_MODEL;
+  if (!openAiModel) {
+    const error = new Error('OPENAI_MODEL is not configured');
+    error.status = 501;
+    throw error;
+  }
+
   if (!csvSample) {
     throw new Error('csvSample is required');
   }
 
   const response = await getClient().responses.create({
     assistant_id: resolvedAssistantId,
+    model: openAiModel,
     input: csvSample,
   });
 
