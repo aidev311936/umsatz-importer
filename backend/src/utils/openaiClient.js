@@ -29,19 +29,40 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     throw new Error('csvSample is required');
   }
 
-  const response = await getClient().responses.create({
-    assistant_id: resolvedAssistantId,
-    input: csvSample,
+  const client = getClient();
+
+  const thread = await client.beta.threads.create();
+  await client.beta.threads.messages.create(thread.id, {
+    role: 'user',
+    content: csvSample,
   });
 
-  const firstMessage = response.output?.[0]?.content?.[0];
-  const raw =
-    typeof firstMessage?.text === 'string'
-      ? firstMessage.text
-      : firstMessage?.text?.value;
+  let run = await client.beta.threads.runs.create(thread.id, {
+    assistant_id: resolvedAssistantId,
+  });
+
+  while (run.status === 'queued' || run.status === 'in_progress') {
+    await new Promise((r) => setTimeout(r, 800));
+    run = await client.beta.threads.runs.retrieve(thread.id, run.id);
+  }
+  if (run.status !== 'completed') {
+    throw new Error(
+      `Run failed with status=${run.status}, details=${JSON.stringify(run.last_error || {})}`
+    );
+  }
+
+  const list = await client.beta.threads.messages.list(thread.id, { order: 'desc', limit: 1 });
+  const msg = list.data?.[0];
+  const part = msg?.content?.[0];
+
+  let raw =
+    part?.text?.value ??
+    (typeof part?.text === 'string' ? part.text : undefined) ??
+    run?.output_text;
   if (!raw) {
     throw new Error('OpenAI API did not return a suggestion payload');
   }
 
-  return JSON.parse(raw);
+  const result = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  return result;
 }
