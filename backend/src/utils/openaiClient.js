@@ -27,17 +27,7 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
       'OpenAI-Beta': 'assistants=v2',
     },
     body: JSON.stringify({
-      input: [
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'input_text',
-              text: csvSample,
-            },
-          ],
-        },
-      ],
+      input: csvSample,
     }),
   });
 
