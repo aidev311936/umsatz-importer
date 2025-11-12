@@ -34,7 +34,11 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     input: csvSample,
   });
 
-  const raw = response.output?.[0]?.content?.[0]?.text?.value;
+  const firstMessage = response.output?.[0]?.content?.[0];
+  const raw =
+    typeof firstMessage?.text === 'string'
+      ? firstMessage.text
+      : firstMessage?.text?.value;
   if (!raw) {
     throw new Error('OpenAI API did not return a suggestion payload');
   }
