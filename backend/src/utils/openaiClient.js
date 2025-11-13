@@ -1,4 +1,13 @@
-import fetch from 'node-fetch';
+import OpenAI from 'openai';
+
+let cachedClient;
+
+function getClient(apiKey) {
+  if (!cachedClient) {
+    cachedClient = new OpenAI({ apiKey });
+  }
+  return cachedClient;
+}
 
 export async function requestMappingSuggestion({ assistantId, csvSample }) {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -19,24 +28,12 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
     throw new Error('csvSample is required');
   }
 
-  const res = await fetch(`https://api.openai.com/v1/assistants/${resolvedAssistantId}/responses`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'OpenAI-Beta': 'assistants=v2',
-    },
-    body: JSON.stringify({
-      input: csvSample,
-    }),
+  const client = getClient(apiKey);
+
+  const data = await client.responses.create({
+    assistant_id: resolvedAssistantId,
+    input: csvSample,
   });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`OpenAI ${res.status}: ${err}`);
-  }
-
-  const data = await res.json();
 
   const first = data?.output?.[0];
   const part = first?.content?.[0];
