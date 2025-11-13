@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 
 let cachedClient;
-const assistantModelCache = new Map();
+const assistantConfigCache = new Map();
 
 function getClient(apiKey) {
   if (!cachedClient) {
@@ -10,24 +10,31 @@ function getClient(apiKey) {
   return cachedClient;
 }
 
-async function resolveModel(client, assistantId) {
-  if (assistantModelCache.has(assistantId)) {
-    return assistantModelCache.get(assistantId);
+async function resolveAssistantConfig(client, assistantId) {
+  if (assistantConfigCache.has(assistantId)) {
+    return assistantConfigCache.get(assistantId);
   }
 
-  let resolvedModel;
+  const config = {
+    model: process.env.OPENAI_MODEL,
+    instructions: undefined,
+  };
+
   try {
     const assistant = await client.beta.assistants.retrieve(assistantId);
-    resolvedModel = assistant?.model;
+    if (assistant?.model) {
+      config.model = assistant.model;
+    }
+    if (assistant?.instructions) {
+      config.instructions = assistant.instructions;
+    }
   } catch (error) {
-    // fall back to configured model; downstream error will mention missing config
     if (process.env.NODE_ENV !== 'production') {
       console.warn('Failed to read assistant configuration from OpenAI API', error);
     }
   }
 
-  resolvedModel = resolvedModel ?? process.env.OPENAI_MODEL;
-  if (!resolvedModel) {
+  if (!config.model) {
     const message =
       'Unable to determine the OpenAI model. Ensure your assistant has a model or set OPENAI_MODEL.';
     const modelError = new Error(message);
@@ -35,8 +42,8 @@ async function resolveModel(client, assistantId) {
     throw modelError;
   }
 
-  assistantModelCache.set(assistantId, resolvedModel);
-  return resolvedModel;
+  assistantConfigCache.set(assistantId, config);
+  return config;
 }
 
 export async function requestMappingSuggestion({ assistantId, csvSample }) {
@@ -59,13 +66,18 @@ export async function requestMappingSuggestion({ assistantId, csvSample }) {
   }
 
   const client = getClient(apiKey);
-  const model = await resolveModel(client, resolvedAssistantId);
+  const { model, instructions } = await resolveAssistantConfig(client, resolvedAssistantId);
 
-  const data = await client.responses.create({
-    assistant_id: resolvedAssistantId,
+  const requestPayload = {
     model,
     input: csvSample,
-  });
+  };
+
+  if (instructions) {
+    requestPayload.instructions = instructions;
+  }
+
+  const data = await client.responses.create(requestPayload);
 
   const first = data?.output?.[0];
   const part = first?.content?.[0];
