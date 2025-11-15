@@ -36,6 +36,7 @@ Damit werden die Abhängigkeiten für Frontend und Backend installiert.
 | `SUPPORT_TOKEN` | Token, das bei allen API-Requests im Header `x-support-token` mitgeschickt werden muss. |
 | `OPENAI_API_KEY` | API Key für den OpenAI-Endpunkt (für KI-Vorschläge). |
 | `OPENAI_ASSISTANT_ID` | ID des vorhandenen OpenAI-Assistants. |
+| `OPENAI_MODEL` | (Optional) Überschreibt das vom Assistant konfigurierte Modell für Responses-Anfragen. |
 | `CORS_ORIGIN` | Kommagetrennte Liste erlaubter Origins für das Backend (z. B. `http://localhost:5173`). |
 | `PORT` | Port, auf dem das Backend lauscht (Standard: `4000`). |
 | `VITE_API_BASE_URL` | (Optional) Basis-URL für das Frontend, wenn eine andere API als `/api` angesprochen werden soll. |
